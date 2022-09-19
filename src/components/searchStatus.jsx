@@ -1,8 +1,6 @@
-import React, {useState} from "react";
-import api from "../api";
+import React from "react";
 
-const SearchStatus = () => {
-    const [users, setUsers] = useState(api.users.fetchAll());
+const SearchStatus = ({usersCount}) => {
 
     const renderPhrase = (number) => {
         const lastOne = Number(number.toString().slice(-1));
@@ -16,10 +14,10 @@ const SearchStatus = () => {
         <>
             <h2>
                 <span
-                    className={"badge " + (users.length > 0 ? "bg-primary" : "bg-danger")}
+                    className={"badge " + (usersCount > 0 ? "bg-primary" : "bg-danger")}
                 >
-                    {users.length > 0
-                        ? `${users.length + " " + renderPhrase(users.length)} с тобой сегодня`
+                    {usersCount > 0
+                        ? `${usersCount + " " + renderPhrase(usersCount)} с тобой сегодня`
                         : "Никто с тобой не тусанет"}
                 </span>
             </h2>

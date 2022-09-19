@@ -1,6 +1,13 @@
 import React from "react";
 
 const Bookmark = (props) => {
+    const {bookmark} = props;
+
+    const switchClasses = () => {
+        classes += bookmark === false ? 'bi-bookmark' : 'bi-bookmark-check';
+        return classes;
+    }
+    let classes = 'bi '
 
     return (
         <>
@@ -9,18 +16,8 @@ const Bookmark = (props) => {
                     className='btn'
                     onClick={() => props.onSwitchBookmarkStatus(props._id)}
                 >
-                    <i className="bi bi-bookmark"></i>
+                    <i className={switchClasses()}></i>
                 </button>
-                {/*{user.bookmark === false
-                    ? (<button
-                        className="btn"
-                        onClick={() => handleSwitchBookmarkStatus(user._id)}
-                    >
-                        <i className="bi bi-bookmark"></i>
-                    </button>)
-                    : (<button className="btn" onClick={() => handleSwitchBookmarkStatus(user._id)}>
-                        <i className="bi bi-bookmark-check"></i>
-                    </button>)}*/}
             </td>
         </>
 

@@ -1,20 +1,12 @@
 import React from "react";
-import {useState} from "@types/react";
-import api from "../api";
 
-const Quality = () => {
-    const [users, setUsers] = useState(api.users.fetchAll());
-
+const Quality = ({qualitie}) => {
     return (
-        <td>
-            {user.qualities.map((item) => (
-                <span
-                    className={"badge m-1 bg-" + item.color}
-                    key={item._id}>
-                    {item.name}
-                </span>
-            ))}
-        </td>
+        <span
+            className={"badge m-1 bg-" + qualitie.color}
+        >
+            {qualitie.name}
+        </span>
     )
 }
 
