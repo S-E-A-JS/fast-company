@@ -4,10 +4,9 @@ const Bookmark = (props) => {
     const {bookmark} = props;
 
     const switchClasses = () => {
-        classes += bookmark === false ? 'bi-bookmark' : 'bi-bookmark-check';
+        const classes = bookmark === false ? 'bi bi-bookmark' : 'bi bi-bookmark-check';
         return classes;
     }
-    let classes = 'bi '
 
     return (
         <>
