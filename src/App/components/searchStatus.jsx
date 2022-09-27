@@ -1,6 +1,7 @@
 import React from "react";
+import { PropTypes } from "prop-types";
 
-const SearchStatus = ({length}) => {
+const SearchStatus = ({ length }) => {
     const renderPhrase = (number) => {
         const lastOne = Number(number.toString().slice(-1));
         if (number > 4 && number < 15) {
@@ -21,6 +22,9 @@ const SearchStatus = ({length}) => {
             </span>
         </h2>
     );
+};
+SearchStatus.propTypes = {
+    length: PropTypes.number.isRequired
 };
 
 export default SearchStatus;
