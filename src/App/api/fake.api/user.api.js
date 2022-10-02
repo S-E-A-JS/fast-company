@@ -1,13 +1,36 @@
-import { professions } from "./professions.api";
+import { professionsObject as professions } from "./professions.api";
 
 const qualities = {
-    tedious: { _id: "67rdca3eeb7f6fgeed471198", name: "Нудила", color: "primary" },
-    strange: { _id: "67rdca3eeb7f6fgeed471100", name: "Странный", color: "secondary" },
-    buller: { _id: "67rdca3eeb7f6fgeed4711012", name: "Троль", color: "success" },
-    alcoholic: { _id: "67rdca3eeb7f6fgeed471101", name: "Алкоголик", color: "danger" },
-    handsome: { _id: "67rdca3eeb7f6fgeed471102", name: "Красавчик", color: "info" },
-    uncertain: { _id: "67rdca3eeb7f6fgeed471103", name: "Неуверенный", color: "dark" }
-
+    tedious: {
+        _id: "67rdca3eeb7f6fgeed471198",
+        name: "Нудила",
+        color: "primary"
+    },
+    strange: {
+        _id: "67rdca3eeb7f6fgeed471100",
+        name: "Странный",
+        color: "secondary"
+    },
+    buller: {
+        _id: "67rdca3eeb7f6fgeed4711012",
+        name: "Троль",
+        color: "success"
+    },
+    alcoholic: {
+        _id: "67rdca3eeb7f6fgeed471101",
+        name: "Алкоголик",
+        color: "danger"
+    },
+    handsome: {
+        _id: "67rdca3eeb7f6fgeed471102",
+        name: "Красавчик",
+        color: "info"
+    },
+    uncertain: {
+        _id: "67rdca3eeb7f6fgeed471103",
+        name: "Неуверенный",
+        color: "dark"
+    }
 };
 
 const users = [
@@ -121,6 +144,13 @@ const users = [
     }
 ];
 
-export function fetchAll() {
-    return users;
-}
+const fetchAll = () =>
+    new Promise((resolve) => {
+        window.setTimeout(function() {
+            resolve(users);
+        }, 2000);
+    });
+
+export default {
+    fetchAll
+};
