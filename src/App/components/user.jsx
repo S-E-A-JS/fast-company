@@ -1,22 +1,18 @@
 import React, { useState, useEffect } from "react";
-import query from "query-string";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import userApi from "../api/fake.api/user.api";
+import UserInfo from "./userInfo";
 
 const User = () => {
- //  const { pathname } = useLocation();
- let user;
+ const [selectedUser, setSelectedUser] = useState();
+ const { userId } = useParams();
  useEffect(() => {
-  userApi.getById().then((data) => (user = data));
- });
- console.log(user);
- //  const pathName = location.pathname;
- return (
-  <>
-   <h1>{} Юзер</h1>
-  </>
- );
+  userApi.getById(userId).then((data) => setSelectedUser(data));
+ }, []);
+ if (!selectedUser) return <h1>Loading...</h1>;
+
+ return <UserInfo {...selectedUser} />;
 };
 
 export default User;
