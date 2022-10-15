@@ -1,5 +1,5 @@
 module.exports = {
-    trailingComma: 'none',
-    tabWidth: 4,
+    trailingComma: "none",
+    tabWidth: 1,
     semi: true
-}
+};
