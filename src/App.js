@@ -8,7 +8,6 @@ import Login from './App/components/login'
 import User from './App/components/user'
 
 function App () {
-  const s = 0
   return (
     <>
       <NavBar />
