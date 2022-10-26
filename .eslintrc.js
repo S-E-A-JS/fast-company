@@ -51,5 +51,6 @@ module.exports = {
     'space-unary-ops': 'error',
     'space-in-parens': [ 'error', 'always' ],
     'arrow-body-style': [ 'error', 'as-needed' ],
+    'react/jsx-max-props-per-line': [ 1, { maximum: 1 }],
   },
 }
