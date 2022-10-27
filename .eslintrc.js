@@ -12,7 +12,9 @@ module.exports = {
   plugins: [ 'react' ],
   rules: {
     quotes: [
-      'error', 'single', { allowTemplateLiterals: true },
+      'error', 'single', {
+        allowTemplateLiterals: true,
+      },
     ],
     semi: [ 2, 'never' ],
     'arrow-parens': [ 'error', 'as-needed' ],
@@ -51,6 +53,11 @@ module.exports = {
     'space-unary-ops': 'error',
     'space-in-parens': [ 'error', 'always' ],
     'arrow-body-style': [ 'error', 'as-needed' ],
-    'react/jsx-max-props-per-line': [ 1, { maximum: 1 }],
+    'react/jsx-max-props-per-line': [
+      1, {
+        maximum: 1,
+      },
+    ],
+    'object-curly-newline': [ 'error', 'always' ],
   },
 }

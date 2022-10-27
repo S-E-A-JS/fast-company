@@ -3,17 +3,23 @@ import { Link } from 'react-router-dom'
 const NavBar = () => (
   <ul className="nav">
     <li className="nav-item">
-      <Link className="nav-link " aria-current="page" to="/">
+      <Link className="nav-link "
+        aria-current="page"
+        to="/">
                     Main
       </Link>
     </li>
     <li className="nav-item">
-      <Link className="nav-link " aria-current="page" to="/login">
+      <Link className="nav-link "
+        aria-current="page"
+        to="/login">
                     Login
       </Link>
     </li>
     <li className="nav-item">
-      <Link className="nav-link " aria-current="page" to="/users">
+      <Link className="nav-link "
+        aria-current="page"
+        to="/users">
                     Users
       </Link>
     </li>

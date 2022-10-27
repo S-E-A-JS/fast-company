@@ -11,9 +11,13 @@ function App () {
     <div>
       <NavBar />
       <Switch>
-        <Route path="/users/:userId?" component={Users} />
-        <Route path="/login" component={Login} />
-        <Route path="/" exact component={Main} />
+        <Route path="/users/:userId?"
+          component={Users} />
+        <Route path="/login"
+          component={Login} />
+        <Route path="/"
+          exact
+          component={Main} />
         <Redirect to="/" />
       </Switch>
     </div>
