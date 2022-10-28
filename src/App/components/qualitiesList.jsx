@@ -2,7 +2,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Quality from './quality'
 
-const QualitiesList = ( { qualities } ) => (
+const QualitiesList = ( {
+  qualities,
+} ) => (
   <>
     {qualities.map ( qual => (
       <Quality key={qual._id}

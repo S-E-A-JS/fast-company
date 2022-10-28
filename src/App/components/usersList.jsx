@@ -1,20 +1,28 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { paginate } from '../utils/paginate'
-import Pagination from './pagination'
+import _ from 'lodash'
+
 import api from '../api'
+
+import Pagination from './pagination'
+import { paginate } from '../utils/paginate'
 import GroupList from './groupList'
 import SearchStatus from './searchStatus'
 import UserTable from './usersTable'
-import _ from 'lodash'
+import SearchInput from './searchInput'
+
 const UsersList = () => {
   const [ currentPage, setCurrentPage ] = useState ( 1 )
   const [ professions, setProfession ] = useState ()
   const [ selectedProf, setSelectedProf ] = useState ()
-  const [ sortBy, setSortBy ] = useState ( { path: 'name', order: 'asc' } )
+  const [ sortBy, setSortBy ] = useState ( {
+    path: 'name',
+    order: 'asc',
+  } )
+  const [ users, setUsers ] = useState ()
+  const [ textState, setTextState ] = useState ( '' )
   const pageSize = 8
 
-  const [ users, setUsers ] = useState ()
   useEffect ( () => {
     api.users.fetchAll ().then ( data => setUsers ( data ) )
   }, [] )
@@ -24,7 +32,10 @@ const UsersList = () => {
   const handleToggleBookMark = id => {
     const newArray = users.map ( user => {
       if ( user._id === id ) {
-        return { ...user, bookmark: !user.bookmark }
+        return {
+          ...user,
+          bookmark: !user.bookmark,
+        }
       }
       return user
     } )
@@ -50,6 +61,16 @@ const UsersList = () => {
     setSortBy ( item )
   }
 
+  // для получения введенного текста из SearchInput
+  const changeTextState = value => {
+    setTextState ( value )
+  }
+  useEffect ( () => { // очиста фильтрации если SearchInput пуст
+    if ( textState.searchData !== '' ) {
+      setSelectedProf ()
+    }
+  }, [ textState ] )
+
   if ( users ) {
     const filteredUsers = selectedProf
       ? users.filter (
@@ -57,7 +78,9 @@ const UsersList = () => {
           JSON.stringify ( user.profession ) ===
                       JSON.stringify ( selectedProf ),
       )
-      : users
+      : textState.searchData
+        ? users.filter ( user => user.name.toLowerCase ().includes ( textState.searchData.toLowerCase () ) )
+        : users
 
     const count = filteredUsers.length
     const sortedUsers = _.orderBy (
@@ -84,12 +107,17 @@ const UsersList = () => {
               onClick={clearFilter}
             >
               {' '}
-                            Очиститть
+                            Очистить
             </button>
           </div>
         )}
         <div className="d-flex flex-column">
           <SearchStatus length={count} />
+          <SearchInput
+            changeTextState={changeTextState}
+            clearFilter={clearFilter}
+            selectedItem={selectedProf}
+          />
           {count > 0 && (
             <UserTable
               users={usersCrop}

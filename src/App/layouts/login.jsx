@@ -1,21 +1,16 @@
-import React, {
-  useEffect, useState,
-} from 'react'
+import React, { useEffect, useState } from 'react'
 
 import TextField from '../components/textField'
-import {
-  validator,
-} from '../utils/validator'
+import { validator } from '../utils/validator'
 
 const Login = () => {
   const [ data, setData ] = useState ( {
-    email: '', password: '',
+    email: '',
+    password: '',
   } )
   const [ errors, setErrors ] = useState ( {
   } )
-  const handleChange = ( {
-    target,
-  } ) => {
+  const handleChange = ( { target } ) => {
     setData ( prevState => ( {
       ...prevState,
       [target.name]: target.value,

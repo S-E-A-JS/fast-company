@@ -10,6 +10,11 @@ module.exports = {
     sourceType: 'module',
   },
   plugins: [ 'react' ],
+  settings: {
+    react: {
+      version: 'detect',
+    },
+  },
   rules: {
     quotes: [
       'error', 'single', {
@@ -58,6 +63,24 @@ module.exports = {
         maximum: 1,
       },
     ],
-    'object-curly-newline': [ 'error', 'always' ],
+    'object-property-newline': [
+      'error', {
+        allowAllPropertiesOnSameLine: false,
+      },
+    ],
+    'object-curly-newline': [
+      'error', {
+        ObjectExpression: 'always',
+        ObjectPattern: {
+          multiline: true,
+          minProperties: 3,
+        },
+        ImportDeclaration: 'never',
+        ExportDeclaration: {
+          multiline: true,
+          minProperties: 3,
+        },
+      },
+    ],
   },
 }
