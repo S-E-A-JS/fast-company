@@ -51,6 +51,7 @@ const UsersList = () => {
   }, [ selectedProf ] )
 
   const handleProfessionSelect = item => {
+    setTextState ( '' )
     setSelectedProf ( item )
   }
 
@@ -61,25 +62,25 @@ const UsersList = () => {
     setSortBy ( item )
   }
 
-  // для получения введенного текста из SearchInput
-  const changeTextState = value => {
-    setTextState ( value )
+  const changeTextState = ( { target } ) => {
+    setTextState ( target.value )
+    setSelectedProf ()
   }
-  useEffect ( () => { // очиста фильтрации если SearchInput пуст
-    if ( textState.searchData !== '' ) {
-      setSelectedProf ()
-    }
-  }, [ textState ] )
+  // useEffect ( () => { // очиста фильтрации если SearchInput пуст
+  //   if ( textState.searchData !== '' ) {
+  //     setSelectedProf ()
+  //   }
+  // }, [ textState ] )
 
   if ( users ) {
-    const filteredUsers = selectedProf
-      ? users.filter (
-        user =>
-          JSON.stringify ( user.profession ) ===
+    const filteredUsers = textState
+      ? users.filter ( user => user.name.toLowerCase ().includes ( textState.toLowerCase () ) )
+      : selectedProf
+        ? users.filter (
+          user =>
+            JSON.stringify ( user.profession ) ===
                       JSON.stringify ( selectedProf ),
-      )
-      : textState.searchData
-        ? users.filter ( user => user.name.toLowerCase ().includes ( textState.searchData.toLowerCase () ) )
+        )
         : users
 
     const count = filteredUsers.length
@@ -115,8 +116,7 @@ const UsersList = () => {
           <SearchStatus length={count} />
           <SearchInput
             changeTextState={changeTextState}
-            clearFilter={clearFilter}
-            selectedItem={selectedProf}
+            value={textState}
           />
           {count > 0 && (
             <UserTable
