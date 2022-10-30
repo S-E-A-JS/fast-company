@@ -4,7 +4,7 @@ import { Route, Switch, Redirect } from 'react-router-dom'
 import Users from './layouts/users'
 import Login from './layouts/login'
 import Main from './layouts/main'
-import NavBar from './components/navbar'
+import NavBar from './components/ui/navbar'
 
 function App () {
   return (
