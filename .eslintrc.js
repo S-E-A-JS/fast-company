@@ -10,9 +10,16 @@ module.exports = {
     sourceType: 'module',
   },
   plugins: [ 'react' ],
+  settings: {
+    react: {
+      version: 'detect',
+    },
+  },
   rules: {
     quotes: [
-      'error', 'single', { allowTemplateLiterals: true },
+      'error', 'single', {
+        allowTemplateLiterals: true,
+      },
     ],
     semi: [ 2, 'never' ],
     'arrow-parens': [ 'error', 'as-needed' ],
@@ -50,6 +57,29 @@ module.exports = {
     ],
     'space-unary-ops': 'error',
     'space-in-parens': [ 'error', 'always' ],
-    'arrow-body-style': [ 'error', 'as-needed' ],
+    'react/jsx-max-props-per-line': [
+      1, {
+        maximum: 1,
+      },
+    ],
+    'object-property-newline': [
+      'error', {
+        allowAllPropertiesOnSameLine: false,
+      },
+    ],
+    'object-curly-newline': [
+      'error', {
+        ObjectExpression: 'always',
+        ObjectPattern: {
+          multiline: true,
+          minProperties: 3,
+        },
+        ImportDeclaration: 'never',
+        ExportDeclaration: {
+          multiline: true,
+          minProperties: 3,
+        },
+      },
+    ],
   },
 }
