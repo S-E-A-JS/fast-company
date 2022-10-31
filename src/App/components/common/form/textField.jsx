@@ -11,6 +11,13 @@ const TextField = ( {
 } ) => {
   const [ showPassword, setShowPassword ] = useState ( false )
 
+  const handleChange = ( { target } ) => {
+    onChange ( {
+      name: target.name,
+      value: target.value,
+    } )
+  }
+
   const getInputClasses = () => 'form-control' + ( error
     ? ' is-invalid'
     : '' )
@@ -29,7 +36,7 @@ const TextField = ( {
           id={name}
           name={name}
           value={value}
-          onChange={onChange}/>
+          onChange={handleChange}/>
         {type === 'password' && ( <button
           className="btn btn-outline-secondary"
           type='button'
