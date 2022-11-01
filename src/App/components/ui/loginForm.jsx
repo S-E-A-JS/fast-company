@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+// import * as yup from 'yup'
 
 import { validator } from '../../utils/validator'
 
@@ -19,6 +20,33 @@ const LoginForm = () => {
       [target.name]: target.value,
     } ) )
   }
+
+  // const validateScheme = yup.object ().shape ( {
+
+  //   password: yup
+  //     .string ()
+  //     .required ( 'Пароль должен быть заполнен' )
+  //     .matches (
+  //       /(?=.*[A-Z])/,
+  //       'Пароль должен содержать хотя бы одну заглавную букву',
+  //     )
+  //     .matches (
+  //       /(?=.*[0-9])/,
+  //       'Пароль должен содержать хотя бы одну цифру',
+  //     )
+  //     .matches (
+  //       /(?=.*[!@#$%^&*])/,
+  //       'Пароль должен содержать хотя бы один из специальных символов !@#$%^&*',
+  //     )
+  //     .matches (
+  //       /(?=.{8,})/,
+  //       'Пароль должен состоять минимум из 8 символов',
+  //     ),
+  //   email: yup
+  //     .string ()
+  //     .required ( 'Электронная почта обязательна для заполнения' )
+  //     .email ( 'Электронная почта введена некорректно' ),
+  // } )
 
   const validatorConfig = {
     email: {
@@ -51,6 +79,12 @@ const LoginForm = () => {
   }, [ data ] )
   const validate = () => {
     const errors = validator ( data, validatorConfig )
+    // validateScheme.validate ( data )
+    //   .then ( () => setErrors ( {
+    //   } ) )
+    //   .catch ( error => setErrors ( {
+    //     [error.path]: error.message,
+    //   } ) )
     setErrors ( errors )
     return Object.keys ( errors ).length === 0
   }
