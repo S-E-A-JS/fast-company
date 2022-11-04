@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
 import api from '../../api'
 
@@ -13,9 +13,29 @@ const EditForm = ( { userId } ) => {
   const [ user, setUser ] = useState ( )
   const [ professions, setProfessions ] = useState ( [] )
   const [ qualities, setQualities ] = useState ( [] )
+  const hist = useHistory ()
+
+  const changeProfKeys = professions => {
+    return professions.map ( profession => ( {
+      label: profession.name,
+      value: profession._id,
+    } ) )
+  }
 
   useEffect ( () => {
-    api.users.getById ( userId ).then ( data => setUser ( data ) )
+    api.users.getById ( userId ).then ( ( {
+      profession,
+      qualities,
+      ...data
+    } ) => {
+      setUser ( prevState => ( {
+        ...prevState,
+        ...data,
+        profession: profession._id,
+        qualities: changeProfKeys ( qualities ),
+      }
+      ) )
+    } )
     api.professions.fetchAll ().then ( data => {
       const proffesionList = Object.keys ( data ).map ( professionName => ( {
         label: data[professionName].name,
@@ -66,17 +86,17 @@ const EditForm = ( { userId } ) => {
     } ) )
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = e => {
+    e.preventDefault ()
     const { profession, qualities } = user
     const userToLocalStorage = {
       ...user,
       profession: getProfessionById ( profession ),
       qualities: getQualities ( qualities ),
     }
-    api.users.update ( userId, userToLocalStorage )
+    api.users.update ( userId, userToLocalStorage ).then ( hist.goBack () )
   }
 
-  // TODO форма должна отображаться только после того как все данные подгрузились иначе Loading...
   if ( user ) {
     return (
       <div className="container mt-5">
@@ -151,10 +171,6 @@ const EditForm = ( { userId } ) => {
 }
 EditForm.propTypes = {
   userId: PropTypes.string,
-  userData: PropTypes.object,
-  // userName: PropTypes.string,
-  // userProfession: PropTypes.string,
-  // userQualities: PropTypes.array,
 }
 
 export default EditForm
