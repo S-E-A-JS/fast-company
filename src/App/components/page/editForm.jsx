@@ -73,7 +73,7 @@ const EditForm = ( { userId } ) => {
       profession: getProfessionById ( profession ),
       qualities: getQualities ( qualities ),
     }
-    api.users.update ( userId, userToLocalStorage ).then ( ( <Link to={`/users/`}/> ) )
+    api.users.update ( userId, userToLocalStorage )
   }
 
   // TODO форма должна отображаться только после того как все данные подгрузились иначе Loading...
