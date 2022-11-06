@@ -4,6 +4,8 @@ import { useHistory } from 'react-router-dom'
 
 import api from '../../api'
 
+import { validator } from '../../utils/validator'
+
 import TextField from '../common/form/textField'
 import SelectField from '../common/form/selectField'
 import RadioField from '../common/form/radioField'
@@ -13,6 +15,8 @@ const EditForm = ( { userId } ) => {
   const [ user, setUser ] = useState ( )
   const [ professions, setProfessions ] = useState ( [] )
   const [ qualities, setQualities ] = useState ( [] )
+  const [ errors, setErrors ] = useState ( {
+  } )
   const hist = useHistory ()
 
   const changeProfKeys = professions => {
@@ -86,8 +90,39 @@ const EditForm = ( { userId } ) => {
     } ) )
   }
 
+  const validatorConfig = {
+    name: {
+      isRequired: {
+        message: 'Имя не должно быть пустым',
+      },
+    },
+    email: {
+      isRequired: {
+        message: 'Email должен быть заполнен',
+      },
+      isEmail: {
+        message: 'Email введен некорректно',
+      },
+    },
+  }
+
+  useEffect ( () => {
+    validate ()
+    console.log ( errors )
+  }, [ user ] )
+
+  const validate = () => {
+    const errors = validator ( user, validatorConfig )
+    setErrors ( errors )
+    return Object.keys ( errors ).length === 0
+  }
+
+  const isValid = Object.keys ( errors ).length === 0
+
   const handleSubmit = e => {
     e.preventDefault ()
+    const isValid = validate ()
+    if ( !isValid ) return
     const { profession, qualities } = user
     const userToLocalStorage = {
       ...user,
@@ -111,12 +146,14 @@ const EditForm = ( { userId } ) => {
                 placeholder='name'
                 value={user.name}
                 onChange={handleChange}
+                error={errors.name}
               />
               <TextField
                 label='Электронная почта'
                 name='email'
                 value={user.email}
                 onChange={handleChange}
+                error={errors.email}
               />
               <SelectField
                 label='Выбери свою профессию'
@@ -157,6 +194,7 @@ const EditForm = ( { userId } ) => {
               <button
                 className='btn btn-primary w-100 mx-auto'
                 type='submit'
+                disabled={!isValid}
               >
           Обновить
               </button>
