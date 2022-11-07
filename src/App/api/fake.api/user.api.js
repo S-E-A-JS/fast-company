@@ -180,7 +180,6 @@ const fetchAll = () =>
       resolve ( JSON.parse ( localStorage.getItem ( 'users' ) ) )
     }, 2000 )
   } )
-
 const update = ( id, data ) =>
   new Promise ( resolve => {
     const users = JSON.parse ( localStorage.getItem ( 'users' ) )

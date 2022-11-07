@@ -1,39 +1,31 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
 import PropTypes from 'prop-types'
-
 import api from '../../../api'
-
 import Qualities from '../../ui/qualities'
+import { useHistory } from 'react-router-dom'
 
 const UserPage = ( { userId } ) => {
-  const [ user, setUser ] = useState ( )
-  const hist = useHistory ()
-
+  const history = useHistory ()
+  const [ user, setUser ] = useState ()
   useEffect ( () => {
     api.users.getById ( userId ).then ( data => setUser ( data ) )
   }, [] )
-
-  const handlePushToEditPage = () => {
-    hist.push ( `${hist.location.pathname}/edit` )
+  const handleClick = () => {
+    history.push ( history.location.pathname + '/edit' )
   }
-
   if ( user ) {
     return (
       <div>
-        <h1>{user.name}</h1>
+        <h1> {user.name}</h1>
         <h2>Профессия: {user.profession.name}</h2>
         <Qualities qualities={user.qualities} />
         <p>completedMeetings: {user.completedMeetings}</p>
         <h2>Rate: {user.rate}</h2>
-        <button
-          onClick={handlePushToEditPage}
-        >
-    Изменить
-        </button>
-      </div> )
+        <button onClick={handleClick}>Изменить</button>
+      </div>
+    )
   } else {
-    return ( <h1>Loading...</h1> )
+    return <h1>Loading</h1>
   }
 }
 

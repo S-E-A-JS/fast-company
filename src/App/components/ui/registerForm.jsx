@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react'
-
+import React, { useEffect, useState } from 'react'
 import { validator } from '../../utils/validator'
-import api from '../../api'
-
 import TextField from '../common/form/textField'
+import api from '../../api'
 import SelectField from '../common/form/selectField'
 import RadioField from '../common/form/radioField'
 import MultiSelectField from '../common/form/multiSelectField'
@@ -14,88 +12,14 @@ const RegisterForm = () => {
     email: '',
     password: '',
     profession: '',
-    sex: 'other',
+    sex: 'male',
     qualities: [],
-    license: false,
+    licence: false,
   } )
   const [ qualities, setQualities ] = useState ( [] )
-  const [ professions, setProfessions ] = useState ( [] )
+  const [ professions, setProfession ] = useState ( [] )
   const [ errors, setErrors ] = useState ( {
   } )
-
-  useEffect ( () => {
-    api.professions.fetchAll ().then ( data => {
-    // setProfessions ( data )
-      const proffesionList = Object.keys ( data ).map ( professionName => ( {
-        label: data[professionName].name,
-        value: data[professionName]._id,
-      } ) )
-      setProfessions ( proffesionList )
-    } )
-    api.qualities.fetchAll ().then ( data => {
-      const qualitiesList = Object.keys ( data ).map ( optionName => ( {
-        label: data[optionName].name,
-        value: data[optionName]._id,
-        color: data[optionName].color,
-      } ) )
-      setQualities ( qualitiesList )
-    } )
-  }, [] )
-
-  const handleChange = target => {
-    setData ( prevState => ( {
-      ...prevState,
-      [target.name]: target.value,
-    } ) )
-  }
-
-  const validatorConfig = {
-    email: {
-      isRequired: {
-        message: 'Электронная почта обязательная для заполнения',
-      },
-      isEmail: {
-        message: 'Email введен некорректно',
-      },
-    },
-    password: {
-      isRequired: {
-        message: 'Пароль обязателен для заполнения',
-      },
-      isCapitalSymbol: {
-        message: 'Пароль должен содержать хотя бы одну заглавную букву',
-      },
-      isContainDigit: {
-        message: 'Пароль должен содержать хотя бы одну цифру',
-      },
-      min: {
-        message: 'Пароль должен состоять не менее чем из 8 символов',
-        value: 8,
-      },
-    },
-    profession: {
-      isRequired: {
-        message: 'Обязательно выберите Вашу профессию',
-      },
-    },
-    license: {
-      isRequired: {
-        message: 'Вы не можете использовать наш сервис без подтверждения лицензионного соглашения',
-      },
-    },
-  }
-
-  useEffect ( () => {
-    validate ()
-  }, [ data ] )
-
-  const validate = () => {
-    const errors = validator ( data, validatorConfig )
-    setErrors ( errors )
-    return Object.keys ( errors ).length === 0
-  }
-
-  const isValid = Object.keys ( errors ).length === 0
 
   const getProfessionById = id => {
     for ( const prof of professions ) {
@@ -123,6 +47,75 @@ const RegisterForm = () => {
     return qualitiesArray
   }
 
+  useEffect ( () => {
+    api.professions.fetchAll ().then ( data => {
+      const professionsList = Object.keys ( data ).map ( professionName => ( {
+        label: data[professionName].name,
+        value: data[professionName]._id,
+      } ) )
+      setProfession ( professionsList )
+    } )
+    api.qualities.fetchAll ().then ( data => {
+      const qualitiesList = Object.keys ( data ).map ( optionName => ( {
+        value: data[optionName]._id,
+        label: data[optionName].name,
+        color: data[optionName].color,
+      } ) )
+      setQualities ( qualitiesList )
+    } )
+  }, [] )
+  const handleChange = target => {
+    setData ( prevState => ( {
+      ...prevState,
+      [target.name]: target.value,
+    } ) )
+  }
+  const validatorConfig = {
+    email: {
+      isRequired: {
+        message: 'Электронная почта обязательна для заполнения',
+      },
+      isEmail: {
+        message: 'Email введен некорректно',
+      },
+    },
+    password: {
+      isRequired: {
+        message: 'Пароль обязателен для заполнения',
+      },
+      isCapitalSymbol: {
+        message: 'Пароль должен содержать хотя бы одну заглавную букву',
+      },
+      isContainDigit: {
+        message: 'Пароль должен содержать хотя бы одно число',
+      },
+      min: {
+        message: 'Пароль должен состоять минимум из 8 символов',
+        value: 8,
+      },
+    },
+    profession: {
+      isRequired: {
+        message: 'Обязательно выберите вашу профессию',
+      },
+    },
+    licence: {
+      isRequired: {
+        message:
+                    'Вы не можете использовать наш сервис без подтверждения лицензионного соглашения',
+      },
+    },
+  }
+  useEffect ( () => {
+    validate ()
+  }, [ data ] )
+  const validate = () => {
+    const errors = validator ( data, validatorConfig )
+    setErrors ( errors )
+    return Object.keys ( errors ).length === 0
+  }
+  const isValid = Object.keys ( errors ).length === 0
+
   const handleSubmit = e => {
     e.preventDefault ()
     const isValid = validate ()
@@ -134,28 +127,28 @@ const RegisterForm = () => {
       qualities: getQualities ( qualities ),
     } )
   }
-  console.log ( professions )
-
   return (
     <form onSubmit={handleSubmit}>
       <TextField
-        label='Электронная почта'
-        name='email'
+        label="Электронная почта"
+        name="email"
         value={data.email}
         onChange={handleChange}
-        error={errors.email}/>
+        error={errors.email}
+      />
       <TextField
-        label='Пароль'
-        type='password'
-        name='password'
+        label="Пароль"
+        type="password"
+        name="password"
         value={data.password}
         onChange={handleChange}
-        error={errors.password}/>
+        error={errors.password}
+      />
       <SelectField
-        name='profession'
-        label='Выбери свою профессию'
-        defaultOption='Choose...'
+        label="Выбери свою профессию"
+        defaultOption="Choose..."
         options={professions}
+        name="profession"
         onChange={handleChange}
         value={data.profession}
         error={errors.profession}
@@ -176,29 +169,32 @@ const RegisterForm = () => {
           },
         ]}
         value={data.sex}
-        name='sex'
+        name="sex"
         onChange={handleChange}
-        label='Выберите ваш пол'
+        label="Выберите ваш пол"
       />
       <MultiSelectField
-        defaultValue={data.qualities}
         options={qualities}
         onChange={handleChange}
-        name='qualities'
-        label='Выберитее ваши качества'
+        defaultValue={data.qualities}
+        name="qualities"
+        label="Выберите ваши качества"
       />
       <CheckBoxField
-        value={data.license}
+        value={data.licence}
         onChange={handleChange}
-        name='license'
-        error={errors.license}
+        name="licence"
+        error={errors.licence}
       >
-      Подтвердить <a>лицензионное соглашение</a>
+                Подтвердить <a>лицензионное соглашение</a>
       </CheckBoxField>
       <button
-        className='btn btn-primary w-100 mx-auto'
-        type='submit'
-        disabled={!isValid}>Submit</button>
+        className="btn btn-primary w-100 mx-auto"
+        type="submit"
+        disabled={!isValid}
+      >
+                Submit
+      </button>
     </form>
   )
 }
