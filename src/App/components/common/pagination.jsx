@@ -1,6 +1,6 @@
 import React from 'react'
-import _ from 'lodash'
 import PropTypes from 'prop-types'
+import _ from 'lodash'
 
 const Pagination = ( {
   itemsCount,
