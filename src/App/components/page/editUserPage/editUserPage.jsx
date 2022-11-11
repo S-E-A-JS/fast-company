@@ -75,6 +75,7 @@ const EditUserPage = () => {
   }
   useEffect ( () => {
     setIsLoading ( true )
+    console.log ( api.users.getById ( userId ).then ( data => setData ( data ) ) )
     api.users.getById ( userId ).then ( ( {
       profession, qualities, ...data
     } ) =>
@@ -127,7 +128,9 @@ const EditUserPage = () => {
     setData ( prevState => ( {
       ...prevState,
       [target.name]: target.value,
+
     } ) )
+    console.log ( target )
   }
   const validate = () => {
     const errors = validator ( data, validatorConfig )
