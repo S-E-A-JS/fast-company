@@ -9,6 +9,7 @@ import Pagination from '../../common/pagination'
 import GroupList from '../../common/groupList'
 import SearchStatus from '../../ui/searchStatus'
 import UserTable from '../../ui/usersTable'
+import { useUser } from '../../../hooks/useUsers'
 
 const UsersListPage = () => {
   const [ currentPage, setCurrentPage ] = useState ( 1 )
@@ -21,12 +22,10 @@ const UsersListPage = () => {
   } )
   const pageSize = 8
 
-  const [ users, setUsers ] = useState ()
-  useEffect ( () => {
-    api.users.fetchAll ().then ( data => setUsers ( data ) )
-  }, [] )
+  const { users } = useUser ()
+
   const handleDelete = userId => {
-    setUsers ( users.filter ( user => user._id !== userId ) )
+    // setUsers ( users.filter ( user => user._id !== userId ) )
   }
   const handleToggleBookMark = id => {
     const newArray = users.map ( user => {
@@ -38,7 +37,8 @@ const UsersListPage = () => {
       }
       return user
     } )
-    setUsers ( newArray )
+    // setUsers ( newArray )
+    console.log ( newArray )
   }
 
   useEffect ( () => {
