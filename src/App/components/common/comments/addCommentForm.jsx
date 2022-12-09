@@ -1,23 +1,20 @@
-import React, { useState, useEffect } from 'react'
-import PropTypes from 'prop-types'
-
+import React, { useEffect, useState } from 'react'
 import API from '../../../api'
-
 import SelectField from '../form/selectField'
 import TextAreaField from '../form/textAreaField'
 import { validator } from '../../../utils/validator'
+import PropTypes from 'prop-types'
 const initialData = {
   userId: '',
   content: '',
 }
 
-const AddCommetnForm = ( { onSubmit } ) => {
+const AddCommentForm = ( { onSubmit } ) => {
   const [ data, setData ] = useState ( initialData )
   const [ users, setUsers ] = useState ( {
   } )
   const [ errors, setErrors ] = useState ( {
   } )
-
   const handleChange = target => {
     setData ( prevState => ( {
       ...prevState,
@@ -27,7 +24,7 @@ const AddCommetnForm = ( { onSubmit } ) => {
   const validatorConfig = {
     userId: {
       isRequired: {
-        message: 'Выберите от чьего имени хотите отправить сообщение',
+        message: 'Выберите от чьего имени вы хотите отправить сообщение',
       },
     },
     content: {
@@ -42,17 +39,14 @@ const AddCommetnForm = ( { onSubmit } ) => {
     setErrors ( errors )
     return Object.keys ( errors ).length === 0
   }
-
   useEffect ( () => {
-    API.users.fetchAll ().then ( data => setUsers ( data ) )
+    API.users.fetchAll ().then ( setUsers )
   }, [] )
-
   const clearForm = () => {
     setData ( initialData )
     setErrors ( {
     } )
   }
-
   const handleSubmit = e => {
     e.preventDefault ()
     const isValid = validate ()
@@ -60,14 +54,12 @@ const AddCommetnForm = ( { onSubmit } ) => {
     onSubmit ( data )
     clearForm ()
   }
-
   const arrayOfUsers =
-  users &&
-  Object.keys ( users ).map ( userId => ( {
-    label: users[userId].name,
-    value: users[userId]._id,
-  } ) )
-
+        users &&
+        Object.keys ( users ).map ( userId => ( {
+          label: users[userId].name,
+          value: users[userId]._id,
+        } ) )
   return (
     <div>
       <h2>New comment</h2>
@@ -75,28 +67,27 @@ const AddCommetnForm = ( { onSubmit } ) => {
         <SelectField
           onChange={handleChange}
           options={arrayOfUsers}
-          name='userId'
+          name="userId"
           value={data.userId}
-          defaultOption='Выберите пользователя'
+          defaultOption="Выберите пользователя"
           error={errors.userId}
         />
         <TextAreaField
           value={data.content}
           onChange={handleChange}
           name="content"
-          label='Сообщение'
+          label="Сообщение"
           error={errors.content}
         />
         <div className="d-flex justify-content-end">
           <button className="btn btn-primary">Опубликовать</button>
         </div>
       </form>
-
     </div>
   )
 }
-AddCommetnForm.propTypes = {
+AddCommentForm.propTypes = {
   onSubmit: PropTypes.func,
 }
 
-export default AddCommetnForm
+export default AddCommentForm

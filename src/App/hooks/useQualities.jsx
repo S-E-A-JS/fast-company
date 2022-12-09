@@ -1,9 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react'
-import PropTypes from 'prop-types'
-
+import React, { useContext, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-
-import qualitiesService from '../service/qualities.service'
+import PropTypes from 'prop-types'
+import qualityService from '../services/quality.service'
 
 const QualitiesContext = React.createContext ()
 
@@ -12,51 +10,53 @@ export const useQualities = () => {
 }
 
 export const QualitiesProvider = ( { children } ) => {
-  const [ isLoading, setLoading ] = useState ( true )
   const [ qualities, setQualities ] = useState ( [] )
   const [ error, setError ] = useState ( null )
+  const [ isLoading, setLoading ] = useState ( true )
 
   useEffect ( () => {
-    if ( !error !== null ) {
-      toast ( error )
-      setError ( null )
+    const getQualities = async () => {
+      try {
+        const { content } = await qualityService.fetchAll ()
+        setQualities ( content )
+        setLoading ( false )
+      } catch ( error ) {
+        errorCatcher ( error )
+      }
     }
-  }, [ error ] )
-
-  useEffect ( () => {
-    getQualitiesList ()
+    getQualities ()
   }, [] )
-
-  async function getQualitiesList () {
-    try {
-      const { content } = await qualitiesService.get ()
-      setQualities ( content )
-      setLoading ( false )
-    } catch ( error ) {
-      errorCatcher ( error )
-    }
-  }
-
-  function getQualities ( id ) {
-    // const userQualities = []
-
-    return qualities.find ( qual => qual._id === id )
+  const getQuality = id => {
+    return qualities.find ( q => q._id === id )
   }
 
   function errorCatcher ( error ) {
     const { message } = error.response.data
     setError ( message )
   }
+  useEffect ( () => {
+    if ( error !== null ) {
+      toast ( error )
+      setError ( null )
+    }
+  }, [ error ] )
 
   return (
-    <QualitiesContext.Provider value={{
-      isLoading,
-      qualities,
-      getQualities,
-    }}>
+    <QualitiesContext.Provider
+      value={{
+        qualities,
+        getQuality,
+        isLoading,
+      }}
+    >
       {children}
-    </QualitiesContext.Provider> )
+    </QualitiesContext.Provider>
+  )
 }
+
 QualitiesProvider.propTypes = {
-  children: PropTypes.oneOfType ( [ PropTypes.arrayOf ( PropTypes.node ), PropTypes.node ] ),
+  children: PropTypes.oneOfType ( [
+    PropTypes.arrayOf ( PropTypes.node ),
+    PropTypes.node,
+  ] ),
 }

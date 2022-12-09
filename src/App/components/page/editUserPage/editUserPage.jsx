@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-
-import api from '../../../api'
 import { validator } from '../../../utils/validator'
-
+import api from '../../../api'
 import TextField from '../../common/form/textField'
 import SelectField from '../../common/form/selectField'
 import RadioField from '../../common/form/radioField'
@@ -76,7 +74,6 @@ const EditUserPage = () => {
   }
   useEffect ( () => {
     setIsLoading ( true )
-    console.log ( api.users.getById ( userId ).then ( data => setData ( data ) ) )
     api.users.getById ( userId ).then ( ( {
       profession, qualities, ...data
     } ) =>
@@ -129,9 +126,7 @@ const EditUserPage = () => {
     setData ( prevState => ( {
       ...prevState,
       [target.name]: target.value,
-
     } ) )
-    console.log ( target )
   }
   const validate = () => {
     const errors = validator ( data, validatorConfig )
@@ -141,7 +136,7 @@ const EditUserPage = () => {
   const isValid = Object.keys ( errors ).length === 0
   return (
     <div className="container mt-5">
-      <BackHistoryButton/>
+      <BackHistoryButton />
       <div className="row">
         <div className="col-md-6 offset-md-3 shadow p-4">
           {!isLoading && Object.keys ( professions ).length > 0
