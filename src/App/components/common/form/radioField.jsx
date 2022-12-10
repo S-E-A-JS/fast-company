@@ -2,11 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 const RadioField = ( {
-  options,
-  name,
-  onChange,
-  value,
-  label,
+  options, name, onChange, value, label,
 } ) => {
   const handleChange = ( { target } ) => {
     onChange ( {
