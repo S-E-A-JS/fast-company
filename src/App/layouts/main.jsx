@@ -3,10 +3,7 @@ import useMockData from '../utils/mockData'
 
 const Main = () => {
   const {
-    error,
-    initialize,
-    progress,
-    status,
+    error, initialize, progress, status,
   } = useMockData ()
   const handleClick = () => {
     initialize ()
@@ -21,8 +18,12 @@ const Main = () => {
         {error && <li>Error: {error}</li>}
       </ul>
       <button className="btn btn-primary"
-        onClick={handleClick}>Иницилизировать</button>
-    </div> )
+        onClick={handleClick}>
+        {' '}
+                Инициализировать
+      </button>
+    </div>
+  )
 }
 
 export default Main

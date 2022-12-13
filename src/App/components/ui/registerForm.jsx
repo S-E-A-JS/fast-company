@@ -7,8 +7,11 @@ import MultiSelectField from '../common/form/multiSelectField'
 import CheckBoxField from '../common/form/checkBoxField'
 import { useQualities } from '../../hooks/useQualities'
 import { useProfessions } from '../../hooks/useProfession'
+import { useAuth } from '../../hooks/useAuth'
+import { useHistory } from 'react-router-dom'
 
 const RegisterForm = () => {
+  const history = useHistory ()
   const [ data, setData ] = useState ( {
     email: '',
     password: '',
@@ -17,14 +20,13 @@ const RegisterForm = () => {
     qualities: [],
     licence: false,
   } )
+  const { signUp } = useAuth ()
   const { qualities } = useQualities ()
-  // Преобразование данных в случае если qualities - массив
   const qualitiesList = qualities.map ( q => ( {
     label: q.name,
     value: q._id,
   } ) )
   const { professions } = useProfessions ()
-  // Преобразование данных если professions - массив
   const professionsList = professions.map ( p => ( {
     label: p.name,
     value: p._id,
@@ -32,54 +34,6 @@ const RegisterForm = () => {
   const [ errors, setErrors ] = useState ( {
   } )
 
-  const getProfessionById = id => {
-    for ( const prof of professions ) {
-      if ( prof._id === id ) {
-        return prof._id
-      }
-    }
-  }
-  const getQualities = elements => {
-    const qualitiesArray = []
-    for ( const elem of elements ) {
-      for ( const quality in qualities ) {
-        if ( elem.value === qualities[quality]._id ) {
-          qualitiesArray.push ( qualities[quality]._id )
-        }
-      }
-    }
-    return qualitiesArray
-  }
-
-  const handleSubmit = e => {
-    e.preventDefault ()
-    const isValid = validate ()
-    if ( !isValid ) return
-    const { profession, qualities } = data
-    console.log ( {
-      ...data,
-      profession: getProfessionById ( profession ),
-      qualities: getQualities ( qualities ),
-    } )
-  }
-
-  // useEffect ( () => {
-  //   api.professions.fetchAll ().then ( data => {
-  //     const professionsList = Object.keys ( data ).map ( professionName => ( {
-  //       label: data[professionName].name,
-  //       value: data[professionName]._id,
-  //     } ) )
-  //     setProfession ( professionsList )
-  //   } )
-  //   api.qualities.fetchAll ().then ( data => {
-  //     const qualitiesList = Object.keys ( data ).map ( optionName => ( {
-  //       value: data[optionName]._id,
-  //       label: data[optionName].name,
-  //       color: data[optionName].color,
-  //     } ) )
-  //     setQualities ( qualitiesList )
-  //   } )
-  // }, [] )
   const handleChange = target => {
     setData ( prevState => ( {
       ...prevState,
@@ -131,6 +85,22 @@ const RegisterForm = () => {
     return Object.keys ( errors ).length === 0
   }
   const isValid = Object.keys ( errors ).length === 0
+
+  const handleSubmit = async e => {
+    e.preventDefault ()
+    const isValid = validate ()
+    if ( !isValid ) return
+    const newData = {
+      ...data,
+      qualities: data.qualities.map ( q => q.value ),
+    }
+    try {
+      await signUp ( newData )
+      history.push ( '/' )
+    } catch ( error ) {
+      setErrors ( error )
+    }
+  }
 
   return (
     <form onSubmit={handleSubmit}>
