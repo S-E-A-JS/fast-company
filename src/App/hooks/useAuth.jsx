@@ -3,9 +3,14 @@ import PropTypes from 'prop-types'
 import { toast } from 'react-toastify'
 import axios from 'axios'
 import userService from '../services/user.service'
-import { setTokens } from '../services/localStorage.service'
+import localStorageService, { setTokens } from '../services/localStorage.service'
 
-const httpAuth = axios.create ()
+export const httpAuth = axios.create ( {
+  baseURL: 'https://identitytoolkit.googleapis.com/v1/',
+  params: {
+    key: process.env.REACT_APP_FIREBASE_KEY,
+  },
+} )
 const AuthContext = React.createContext ()
 
 export const useAuth = () => {
@@ -13,17 +18,48 @@ export const useAuth = () => {
 }
 
 const AuthProvider = ( { children } ) => {
-  const [ currentUser, setUser ] = useState ( {
-  } )
+  const [ currentUser, setUser ] = useState ( )
   const [ error, setError ] = useState ( null )
+  const [ isLoading, setLoading ] = useState ( true )
+
+  async function logIn ( { email, password } ) {
+    try {
+      const { data } = await httpAuth.post (
+        `accounts:signInWithPassword`,
+        {
+          email,
+          password,
+          returnSecureToken: true,
+        },
+      )
+      setTokens ( data )
+      await getUserData ()
+    } catch ( error ) {
+      errorCatcher ( error )
+      const { code, message } = error.response.data.error
+      console.log ( code, message )
+      if ( code === 400 ) {
+        switch ( message ) {
+        case 'INVALID_PASSWORD':
+          throw new Error ( 'Email или пароль введены некорректно' )
+        default:
+          throw new Error (
+            'Слишком много попыток входа. Попробуйте позже',
+          )
+        }
+      }
+    }
+  }
+
+  function getRandomInt ( min, max ) {
+    return Math.floor ( Math.random () * ( max - min + 1 ) + min )
+  }
 
   async function signUp ( {
     email, password, ...rest
   } ) {
-    const url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.REACT_APP_FIREBASE_KEY}`
-
     try {
-      const { data } = await httpAuth.post ( url, {
+      const { data } = await httpAuth.post ( `accounts:signUp`, {
         email,
         password,
         returnSecureToken: true,
@@ -32,6 +68,8 @@ const AuthProvider = ( { children } ) => {
       await createUser ( {
         _id: data.localId,
         email,
+        rate: getRandomInt ( 1, 5 ),
+        completedMeetings: getRandomInt ( 0, 200 ),
         ...rest,
       } )
     } catch ( error ) {
@@ -48,50 +86,10 @@ const AuthProvider = ( { children } ) => {
       }
     }
   }
-
-  async function logIn ( {
-    email, password, ...rest
-  } ) {
-    const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.REACT_APP_FIREBASE_KEY}`
-
-    let pass = false
-
-    try {
-      const { data } = await httpAuth.post ( url, {
-        email,
-        password,
-        returnSecureToken: true,
-      } )
-      setTokens ( data )
-      pass = true
-    } catch ( error ) {
-      errorCatcher ( error )
-      const { code, message } = error.response.data.error
-      console.log ( code, message )
-      toast ( error )
-      if ( code === 400 ) {
-        if ( ( message === 'EMAIL_NOT_FOUND' ) || message === 'INVALID_PASSWORD' ) {
-          const errorObject = {
-            email: 'Данные пользователя введены некорректно',
-            password: 'Данные пользователя введены некорректно',
-          }
-          throw ( errorObject )
-        } else {
-          toast.error ( 'Что то пошло не так' )
-
-          throw new Error ( 'Что то пошло не так' )
-        }
-      } else {
-        toast.error ( 'Что то пошло не так' )
-        throw new Error ( 'Что то пошло не так' )
-      }
-    }
-    return pass
-  }
-
   async function createUser ( data ) {
     try {
-      const { content } = userService.create ( data )
+      const { content } = await userService.create ( data )
+      console.log ( content )
       setUser ( content )
     } catch ( error ) {
       errorCatcher ( error )
@@ -101,6 +99,26 @@ const AuthProvider = ( { children } ) => {
     const { message } = error.response.data
     setError ( message )
   }
+
+  async function getUserData () {
+    try {
+      const { content } = await userService.getCurrentUser ()
+      setUser ( content )
+    } catch ( error ) {
+      errorCatcher ( error )
+    } finally {
+      setLoading ( false )
+    }
+  }
+
+  useEffect ( () => {
+    if ( localStorageService.getAccessToken () ) {
+      getUserData ()
+    } else {
+      setLoading ( false )
+    }
+  }, [] )
+
   useEffect ( () => {
     if ( error !== null ) {
       toast ( error )
@@ -110,10 +128,12 @@ const AuthProvider = ( { children } ) => {
   return (
     <AuthContext.Provider value={{
       signUp,
-      currentUser,
       logIn,
+      currentUser,
     }}>
-      {children}
+      {!isLoading
+        ? children
+        : 'Loading...'}
     </AuthContext.Provider>
   )
 }
