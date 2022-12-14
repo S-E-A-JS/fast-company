@@ -17,7 +17,7 @@ module.exports = {
   },
   rules: {
     quotes: [
-      'error', 'single', {
+      'warn', 'single', {
         allowTemplateLiterals: true,
       },
     ],
