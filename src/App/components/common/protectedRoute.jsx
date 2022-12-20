@@ -1,7 +1,7 @@
-import React from 'react'
-import { Redirect, Route } from 'react-router-dom'
-import { useAuth } from '../../hooks/useAuth'
-import PropTypes from 'prop-types'
+import React from "react"
+import { Redirect, Route } from "react-router-dom"
+import { useAuth } from "../../hooks/useAuth"
+import PropTypes from "prop-types"
 
 const ProtectedRoute = ( {
   component: Component, children, ...rest
@@ -13,7 +13,7 @@ const ProtectedRoute = ( {
       render={props => {
         if ( !currentUser ) {
           return ( <Redirect to={{
-            pathname: '/login',
+            pathname: "/login",
             state: {
               from: props.location,
             },

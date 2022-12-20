@@ -1,8 +1,8 @@
-import axios from 'axios'
-import { toast } from 'react-toastify'
-import configFile from '../config.json'
-import { httpAuth } from '../hooks/useAuth'
-import localStorageService from './localStorage.service'
+import axios from "axios"
+import { toast } from "react-toastify"
+import configFile from "../config.json"
+import { httpAuth } from "../hooks/useAuth"
+import localStorageService from "./localStorage.service"
 
 const http = axios.create ( {
   baseURL: configFile.apiEndpoint,
@@ -15,12 +15,12 @@ http.interceptors.request.use (
       config.url =
                 ( containSlash
                   ? config.url.slice ( 0, -1 )
-                  : config.url ) + '.json'
+                  : config.url ) + ".json"
       const expiresDate = localStorageService.getTokenExpiresDate ()
       const refreshToken = localStorageService.getRefreshToken ()
       if ( refreshToken && expiresDate < Date.now () ) {
-        const { data } = await httpAuth.post ( 'token', {
-          grant_type: 'refresh_token',
+        const { data } = await httpAuth.post ( "token", {
+          grant_type: "refresh_token",
           refresh_token: refreshToken,
         } )
         localStorageService.setTokens ( {
@@ -44,6 +44,7 @@ http.interceptors.request.use (
     return Promise.reject ( error )
   },
 )
+
 function transformData ( data ) {
   return data && !data._id
     ? Object.keys ( data ).map ( key => ( {
@@ -51,6 +52,7 @@ function transformData ( data ) {
     } ) )
     : data
 }
+
 http.interceptors.response.use (
   res => {
     if ( configFile.isFireBase ) {
@@ -67,16 +69,17 @@ http.interceptors.response.use (
             error.response.status < 500
 
     if ( !expectedErrors ) {
-      console.log ( error )
-      toast.error ( 'Something was wrong. Try it later' )
+      toast.error ( "Something was wrong. Try it later" )
     }
     return Promise.reject ( error )
   },
 )
+
 const httpService = {
   get: http.get,
   post: http.post,
   put: http.put,
   delete: http.delete,
+  patch: http.patch,
 }
 export default httpService

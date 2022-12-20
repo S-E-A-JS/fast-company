@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { toast } from 'react-toastify'
-import PropTypes from 'prop-types'
-import qualityService from '../services/quality.service'
+import React, { useContext, useEffect, useState } from "react"
+import { toast } from "react-toastify"
+import PropTypes from "prop-types"
+import qualityService from "../services/quality.service"
 
 const QualitiesContext = React.createContext ()
 
@@ -14,20 +14,28 @@ export const QualitiesProvider = ( { children } ) => {
   const [ error, setError ] = useState ( null )
   const [ isLoading, setLoading ] = useState ( true )
 
-  useEffect ( () => {
-    const getQualities = async () => {
-      try {
-        const { content } = await qualityService.fetchAll ()
-        setQualities ( content )
-        setLoading ( false )
-      } catch ( error ) {
-        errorCatcher ( error )
-      }
+  const getQualities = async () => {
+    try {
+      const { content } = await qualityService.fetchAll ()
+      setQualities ( content )
+      setLoading ( false )
+    } catch ( error ) {
+      errorCatcher ( error )
     }
+  }
+  useEffect ( () => {
     getQualities ()
   }, [] )
+
   const getQuality = id => {
-    return qualities.find ( q => q._id === id )
+    return qualities.find ( q => {
+      return q._id === id
+    } )
+  }
+
+  // Получить массив объектов Qualities для юзера
+  const getQualitiesList = arrayQualId => {
+    return arrayQualId.map ( q => getQuality ( q ) )
   }
 
   function errorCatcher ( error ) {
@@ -46,6 +54,7 @@ export const QualitiesProvider = ( { children } ) => {
       value={{
         qualities,
         getQuality,
+        getQualitiesList,
         isLoading,
       }}
     >

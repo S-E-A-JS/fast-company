@@ -1,18 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import { validator } from '../../utils/validator'
-import TextField from '../common/form/textField'
-import CheckBoxField from '../common/form/checkBoxField'
-import { useAuth } from '../../hooks/useAuth'
-import { useHistory } from 'react-router-dom'
+import React, { useEffect, useState } from "react"
+import { validator } from "../../utils/validator"
+import TextField from "../common/form/textField"
+import CheckBoxField from "../common/form/checkBoxField"
+import { useAuth } from "../../hooks/useAuth"
+import { useHistory } from "react-router-dom"
 
 const LoginForm = () => {
   const [ data, setData ] = useState ( {
-    email: '',
-    password: '',
+    email: "",
+    password: "",
     stayOn: false,
   } )
   const history = useHistory ()
-  console.log ( )
   const { logIn } = useAuth ()
   const [ errors, setErrors ] = useState ( {
   } )
@@ -28,12 +27,12 @@ const LoginForm = () => {
   const validatorConfig = {
     email: {
       isRequired: {
-        message: 'Электронная почта обязательна для заполнения',
+        message: "Электронная почта обязательна для заполнения",
       },
     },
     password: {
       isRequired: {
-        message: 'Пароль обязателен для заполнения',
+        message: "Пароль обязателен для заполнения",
       },
     },
   }
@@ -56,7 +55,7 @@ const LoginForm = () => {
       await logIn ( data )
       history.push ( history.location.state
         ? history.location.state.from.pathname
-        : '/' )
+        : "/" )
     } catch ( error ) {
       setEnterError ( error.message )
     }

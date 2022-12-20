@@ -1,23 +1,23 @@
-import React, { useEffect, useState } from 'react'
-import { validator } from '../../utils/validator'
-import TextField from '../common/form/textField'
-import SelectField from '../common/form/selectField'
-import RadioField from '../common/form/radioField'
-import MultiSelectField from '../common/form/multiSelectField'
-import CheckBoxField from '../common/form/checkBoxField'
-import { useQualities } from '../../hooks/useQualities'
-import { useProfessions } from '../../hooks/useProfession'
-import { useAuth } from '../../hooks/useAuth'
-import { useHistory } from 'react-router-dom'
+import React, { useEffect, useState } from "react"
+import { validator } from "../../utils/validator"
+import TextField from "../common/form/textField"
+import SelectField from "../common/form/selectField"
+import RadioField from "../common/form/radioField"
+import MultiSelectField from "../common/form/multiSelectField"
+import CheckBoxField from "../common/form/checkBoxField"
+import { useQualities } from "../../hooks/useQualities"
+import { useProfessions } from "../../hooks/useProfession"
+import { useAuth } from "../../hooks/useAuth"
+import { useHistory } from "react-router-dom"
 
 const RegisterForm = () => {
   const history = useHistory ()
   const [ data, setData ] = useState ( {
-    email: '',
-    password: '',
-    profession: '',
-    sex: 'male',
-    name: '',
+    email: "",
+    password: "",
+    profession: "",
+    sex: "male",
+    name: "",
     qualities: [],
     licence: false,
   } )
@@ -44,46 +44,46 @@ const RegisterForm = () => {
   const validatorConfig = {
     email: {
       isRequired: {
-        message: 'Электронная почта обязательна для заполнения',
+        message: "Электронная почта обязательна для заполнения",
       },
       isEmail: {
-        message: 'Email введен некорректно',
+        message: "Email введен некорректно",
       },
     },
     name: {
       isRequired: {
-        message: 'Имя обязательно для заполнения',
+        message: "Имя обязательно для заполнения",
       },
       min: {
-        message: 'Имя должно состоять не менее чем из 3 символов',
+        message: "Имя должно состоять не менее чем из 3 символов",
         value: 3,
       },
 
     },
     password: {
       isRequired: {
-        message: 'Пароль обязателен для заполнения',
+        message: "Пароль обязателен для заполнения",
       },
       isCapitalSymbol: {
-        message: 'Пароль должен содержать хотя бы одну заглавную букву',
+        message: "Пароль должен содержать хотя бы одну заглавную букву",
       },
       isContainDigit: {
-        message: 'Пароль должен содержать хотя бы одно число',
+        message: "Пароль должен содержать хотя бы одно число",
       },
       min: {
-        message: 'Пароль должен состоять минимум из 8 символов',
+        message: "Пароль должен состоять минимум из 8 символов",
         value: 8,
       },
     },
     profession: {
       isRequired: {
-        message: 'Обязательно выберите вашу профессию',
+        message: "Обязательно выберите вашу профессию",
       },
     },
     licence: {
       isRequired: {
         message:
-                    'Вы не можете использовать наш сервис без подтверждения лицензионного соглашения',
+                    "Вы не можете использовать наш сервис без подтверждения лицензионного соглашения",
       },
     },
   }
@@ -108,7 +108,7 @@ const RegisterForm = () => {
 
     try {
       await signUp ( newData )
-      history.push ( '/' )
+      history.push ( "/" )
     } catch ( error ) {
       setErrors ( error )
     }
@@ -150,16 +150,16 @@ const RegisterForm = () => {
       <RadioField
         options={[
           {
-            name: 'Male',
-            value: 'male',
+            name: "Male",
+            value: "male",
           },
           {
-            name: 'Female',
-            value: 'female',
+            name: "Female",
+            value: "female",
           },
           {
-            name: 'Other',
-            value: 'other',
+            name: "Other",
+            value: "other",
           },
         ]}
         value={data.sex}
