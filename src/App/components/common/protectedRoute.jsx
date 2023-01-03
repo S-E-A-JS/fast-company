@@ -1,33 +1,41 @@
 import React from "react"
-import { Redirect, Route } from "react-router-dom"
-import { useAuth } from "../../hooks/useAuth"
+import { Route, Redirect } from "react-router-dom"
 import PropTypes from "prop-types"
-
-const ProtectedRoute = ( {
+import { useAuth } from "../../hooks/useAuth"
+function ProtectedRoute ( {
   component: Component, children, ...rest
-} ) => {
+} ) {
   const { currentUser } = useAuth ()
-
   return (
-    <Route {...rest}
+    <Route
+      {...rest}
       render={props => {
         if ( !currentUser ) {
-          return ( <Redirect to={{
-            pathname: "/login",
-            state: {
-              from: props.location,
-            },
-          }}/> )
+          return (
+            <Redirect
+              to={{
+                pathname: "/login",
+                state: {
+                  from: props.location,
+                },
+              }}
+            />
+          )
         }
         return Component
-          ? <Component {...props}/>
+          ? <Component {...props} />
           : children
-      }}/> )
+      }}
+    />
+  )
 }
 ProtectedRoute.propTypes = {
   component: PropTypes.func,
   location: PropTypes.object,
-  children: PropTypes.oneOfType ( [ PropTypes.arrayOf ( PropTypes.node ), PropTypes.node ] ),
+  children: PropTypes.oneOfType ( [
+    PropTypes.arrayOf ( PropTypes.node ),
+    PropTypes.node,
+  ] ),
 }
 
 export default ProtectedRoute

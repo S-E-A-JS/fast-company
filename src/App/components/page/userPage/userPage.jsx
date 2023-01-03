@@ -1,11 +1,11 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import UserCard from '../../ui/userCard'
-import QualitiesCard from '../../ui/qualitiesCard'
-import MeetingsCard from '../../ui/meetingsCard'
-import Comments from '../../ui/comments'
-import { useUser } from '../../../hooks/useUsers'
-import CommentsProvider from '../../../hooks/useComments'
+import React from "react"
+import PropTypes from "prop-types"
+import UserCard from "../../ui/userCard"
+import QualitiesCard from "../../ui/qualitiesCard"
+import MeetingsCard from "../../ui/meetingsCard"
+import Comments from "../../ui/comments"
+import { useUser } from "../../../hooks/useUsers"
+import { CommentsProvider } from "../../../hooks/useComments"
 
 const UserPage = ( { userId } ) => {
   const { getUserById } = useUser ()

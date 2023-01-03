@@ -1,15 +1,13 @@
-import React, { useEffect, useState } from 'react'
-
-import TextAreaField from '../form/textAreaField'
-import { validator } from '../../../utils/validator'
-import PropTypes from 'prop-types'
+import React, { useState } from "react"
+import TextAreaField from "../form/textAreaField"
+import { validator } from "../../../utils/validator"
+import PropTypes from "prop-types"
 
 const AddCommentForm = ( { onSubmit } ) => {
   const [ data, setData ] = useState ( {
   } )
   const [ errors, setErrors ] = useState ( {
   } )
-
   const handleChange = target => {
     setData ( prevState => ( {
       ...prevState,
@@ -17,10 +15,9 @@ const AddCommentForm = ( { onSubmit } ) => {
     } ) )
   }
   const validatorConfig = {
-
     content: {
       isRequired: {
-        message: 'Сообщение не может быть пустым',
+        message: "Сообщение не может быть пустым",
       },
     },
   }
@@ -30,7 +27,6 @@ const AddCommentForm = ( { onSubmit } ) => {
     setErrors ( errors )
     return Object.keys ( errors ).length === 0
   }
-
   const clearForm = () => {
     setData ( {
     } )
@@ -44,14 +40,12 @@ const AddCommentForm = ( { onSubmit } ) => {
     onSubmit ( data )
     clearForm ()
   }
-
   return (
     <div>
       <h2>New comment</h2>
       <form onSubmit={handleSubmit}>
-
         <TextAreaField
-          value={data.content || ''}
+          value={data.content || ""}
           onChange={handleChange}
           name="content"
           label="Сообщение"

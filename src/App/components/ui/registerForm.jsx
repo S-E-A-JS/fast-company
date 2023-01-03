@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react"
+import { useHistory } from "react-router-dom"
+import { useSelector } from "react-redux"
+
 import { validator } from "../../utils/validator"
+import { useAuth } from "../../hooks/useAuth"
+import { getQualities } from "../../store/qualities"
+import { getProfessions } from "../../store/professions"
+
 import TextField from "../common/form/textField"
 import SelectField from "../common/form/selectField"
 import RadioField from "../common/form/radioField"
 import MultiSelectField from "../common/form/multiSelectField"
 import CheckBoxField from "../common/form/checkBoxField"
-import { useQualities } from "../../hooks/useQualities"
-import { useProfessions } from "../../hooks/useProfession"
-import { useAuth } from "../../hooks/useAuth"
-import { useHistory } from "react-router-dom"
 
 const RegisterForm = () => {
   const history = useHistory ()
@@ -22,12 +25,12 @@ const RegisterForm = () => {
     licence: false,
   } )
   const { signUp } = useAuth ()
-  const { qualities } = useQualities ()
+  const qualities = useSelector ( getQualities () )
   const qualitiesList = qualities.map ( q => ( {
     label: q.name,
     value: q._id,
   } ) )
-  const { professions } = useProfessions ()
+  const professions = useSelector ( getProfessions () )
   const professionsList = professions.map ( p => ( {
     label: p.name,
     value: p._id,
@@ -55,10 +58,9 @@ const RegisterForm = () => {
         message: "Имя обязательно для заполнения",
       },
       min: {
-        message: "Имя должно состоять не менее чем из 3 символов",
+        message: "Имя должно состоять минимум из 3 символов",
         value: 3,
       },
-
     },
     password: {
       isRequired: {

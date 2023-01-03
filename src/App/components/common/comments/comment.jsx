@@ -12,12 +12,11 @@ const Comment = ( {
 } ) => {
   const { getUserById } = useUser ()
   const { currentUser } = useAuth ()
-
   const user = getUserById ( userId )
+
   return (
     <div className="bg-light card-body  mb-3">
       <div className="row">
-
         <div className="col">
           <div className="d-flex flex-start ">
             <img
@@ -33,17 +32,17 @@ const Comment = ( {
                   <p className="mb-1 ">
                     {user && user.name}{" "}
                     <span className="small">
-                     - {displayDate ( created )}
+                                            - {displayDate ( created )}
                     </span>
                   </p>
-                  {currentUser._id === userId &&
+                  {currentUser._id === userId && (
                     <button
                       className="btn btn-sm text-primary d-flex align-items-center"
                       onClick={() => onRemove ( id )}
                     >
                       <i className="bi bi-x-lg"></i>
                     </button>
-                  }
+                  )}
                 </div>
                 <p className="small mb-0">{content}</p>
               </div>

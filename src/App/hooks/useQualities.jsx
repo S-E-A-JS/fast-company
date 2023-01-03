@@ -14,28 +14,20 @@ export const QualitiesProvider = ( { children } ) => {
   const [ error, setError ] = useState ( null )
   const [ isLoading, setLoading ] = useState ( true )
 
-  const getQualities = async () => {
-    try {
-      const { content } = await qualityService.fetchAll ()
-      setQualities ( content )
-      setLoading ( false )
-    } catch ( error ) {
-      errorCatcher ( error )
-    }
-  }
   useEffect ( () => {
+    const getQualities = async () => {
+      try {
+        const { content } = await qualityService.fetchAll ()
+        setQualities ( content )
+        setLoading ( false )
+      } catch ( error ) {
+        errorCatcher ( error )
+      }
+    }
     getQualities ()
   }, [] )
-
   const getQuality = id => {
-    return qualities.find ( q => {
-      return q._id === id
-    } )
-  }
-
-  // Получить массив объектов Qualities для юзера
-  const getQualitiesList = arrayQualId => {
-    return arrayQualId.map ( q => getQuality ( q ) )
+    return qualities.find ( q => q._id === id )
   }
 
   function errorCatcher ( error ) {
@@ -54,7 +46,6 @@ export const QualitiesProvider = ( { children } ) => {
       value={{
         qualities,
         getQuality,
-        getQualitiesList,
         isLoading,
       }}
     >

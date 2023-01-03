@@ -27,6 +27,7 @@ export const ProfessionProvider = ( { children } ) => {
     const { message } = error.response.data
     setError ( message )
   }
+
   function getProfession ( id ) {
     return professions.find ( p => p._id === id )
   }

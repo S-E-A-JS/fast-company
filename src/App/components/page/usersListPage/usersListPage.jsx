@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import PropTypes from "prop-types"
 import { paginate } from "../../../utils/paginate"
 import Pagination from "../../common/pagination"
@@ -7,14 +7,15 @@ import SearchStatus from "../../ui/searchStatus"
 import UserTable from "../../ui/usersTable"
 import _ from "lodash"
 import { useUser } from "../../../hooks/useUsers"
-import { useProfessions } from "../../../hooks/useProfession"
 import { useAuth } from "../../../hooks/useAuth"
-
+import { useSelector } from "react-redux"
+import { getProfessions, getProfessionsLoadingStatus } from "../../../store/professions"
 const UsersListPage = () => {
   const { users } = useUser ()
   const { currentUser } = useAuth ()
+  const professions = useSelector ( getProfessions () )
+  const professionsLoading = useSelector ( getProfessionsLoadingStatus () )
   const [ currentPage, setCurrentPage ] = useState ( 1 )
-  const { isLoading: professionsLoading, professions } = useProfessions ()
   const [ searchQuery, setSearchQuery ] = useState ( "" )
   const [ selectedProf, setSelectedProf ] = useState ()
   const [ sortBy, setSortBy ] = useState ( {
@@ -24,6 +25,7 @@ const UsersListPage = () => {
   const pageSize = 8
 
   const handleDelete = userId => {
+    // setUsers(users.filter((user) => user._id !== userId));
     console.log ( userId )
   }
   const handleToggleBookMark = id => {
@@ -36,6 +38,7 @@ const UsersListPage = () => {
       }
       return user
     } )
+    // setUsers(newArray);
     console.log ( newArray )
   }
 
@@ -59,26 +62,25 @@ const UsersListPage = () => {
     setSortBy ( item )
   }
 
-  function filterUsers ( data ) {
-    const filteredUsers = searchQuery
-      ? data.filter (
-        user =>
-          user.name
-            .toLowerCase ()
-            .indexOf ( searchQuery.toLowerCase () ) !== -1,
-      )
-      : selectedProf
+  if ( users ) {
+    function filterUsers ( data ) {
+      const filteredUsers = searchQuery
         ? data.filter (
           user =>
-            JSON.stringify ( user.profession ) ===
-                    JSON.stringify ( selectedProf ),
+            user.name
+              .toLowerCase ()
+              .indexOf ( searchQuery.toLowerCase () ) !== -1,
         )
-        : data
-    return filteredUsers.filter ( u => u._id !== currentUser._id )
-  }
-  const filteredUsers = filterUsers ( users )
-
-  if ( users ) {
+        : selectedProf
+          ? data.filter (
+            user =>
+              JSON.stringify ( user.profession ) ===
+                          JSON.stringify ( selectedProf ),
+          )
+          : data
+      return filteredUsers.filter ( u => u._id !== currentUser._id )
+    }
+    const filteredUsers = filterUsers ( users )
     const count = filteredUsers.length
     const sortedUsers = _.orderBy (
       filteredUsers,

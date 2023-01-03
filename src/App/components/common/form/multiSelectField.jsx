@@ -3,11 +3,7 @@ import Select from "react-select"
 import PropTypes from "prop-types"
 
 const MultiSelectField = ( {
-  options,
-  onChange,
-  name,
-  label,
-  defaultValue,
+  options, onChange, name, label, defaultValue,
 } ) => {
   const optionsArray =
         !Array.isArray ( options ) && typeof options === "object"
@@ -20,7 +16,6 @@ const MultiSelectField = ( {
       value,
     } )
   }
-
   return (
     <div className="mb-4">
       <label className="form-label">{label}</label>

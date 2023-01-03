@@ -19,40 +19,10 @@ export const useAuth = () => {
 }
 
 const AuthProvider = ( { children } ) => {
-  const [ currentUser, setUser ] = useState ( )
+  const [ currentUser, setUser ] = useState ()
   const [ error, setError ] = useState ( null )
   const [ isLoading, setLoading ] = useState ( true )
   const history = useHistory ()
-
-  async function updateUserEmail ( email ) {
-    try {
-      const { data } = await httpAuth.post (
-        `accounts:update`,
-        {
-          idToken: localStorageService.getAccessToken (),
-          email,
-          returnSecureToken: true,
-        },
-      )
-      setTokens ( data )
-      return data
-    } catch ( error ) {
-      errorCatcher ( error )
-    }
-  }
-
-  async function updateUserProfile ( payload ) {
-    try {
-      const { content } = await userService.updateUser ( payload )
-
-      if ( currentUser.email !== payload.email ) {
-        updateUserEmail ( payload.email )
-      }
-      setUser ( content )
-    } catch ( error ) {
-      errorCatcher ( error )
-    }
-  }
 
   async function logIn ( { email, password } ) {
     try {
@@ -74,6 +44,7 @@ const AuthProvider = ( { children } ) => {
         switch ( message ) {
         case "INVALID_PASSWORD":
           throw new Error ( "Email или пароль введены некорректно" )
+
         default:
           throw new Error (
             "Слишком много попыток входа. Попробуйте позже",
@@ -82,9 +53,24 @@ const AuthProvider = ( { children } ) => {
       }
     }
   }
+  function logOut () {
+    localStorageService.removeAuthData ()
+    setUser ( null )
+    history.push ( "/" )
+  }
 
-  function getRandomInt ( min, max ) {
+  function randomInt ( min, max ) {
     return Math.floor ( Math.random () * ( max - min + 1 ) + min )
+  }
+
+  async function updateUserData ( data ) {
+    try {
+      const { content } = await userService.update ( data )
+      setUser ( content )
+      console.log ( content )
+    } catch ( error ) {
+      errorCatcher ( error )
+    }
   }
 
   async function signUp ( {
@@ -100,8 +86,8 @@ const AuthProvider = ( { children } ) => {
       await createUser ( {
         _id: data.localId,
         email,
-        rate: getRandomInt ( 1, 5 ),
-        completedMeetings: getRandomInt ( 0, 200 ),
+        rate: randomInt ( 1, 5 ),
+        completedMeetings: randomInt ( 0, 200 ),
         image: `https://avatars.dicebear.com/api/avataaars/${(
           Math.random () + 1
         )
@@ -123,21 +109,19 @@ const AuthProvider = ( { children } ) => {
       }
     }
   }
-
   async function createUser ( data ) {
     try {
       const { content } = await userService.create ( data )
+      console.log ( content )
       setUser ( content )
     } catch ( error ) {
       errorCatcher ( error )
     }
   }
-
   function errorCatcher ( error ) {
     const { message } = error.response.data
     setError ( message )
   }
-
   async function getUserData () {
     try {
       const { content } = await userService.getCurrentUser ()
@@ -148,7 +132,6 @@ const AuthProvider = ( { children } ) => {
       setLoading ( false )
     }
   }
-
   useEffect ( () => {
     if ( localStorageService.getAccessToken () ) {
       getUserData ()
@@ -156,27 +139,22 @@ const AuthProvider = ( { children } ) => {
       setLoading ( false )
     }
   }, [] )
-
   useEffect ( () => {
     if ( error !== null ) {
       toast ( error )
       setError ( null )
     }
   }, [ error ] )
-
-  function logOut () {
-    localStorageService.removeAuthData ()
-    setUser ( null )
-    history.push ( "/" )
-  }
   return (
-    <AuthContext.Provider value={{
-      signUp,
-      logIn,
-      currentUser,
-      logOut,
-      updateUserProfile,
-    }}>
+    <AuthContext.Provider
+      value={{
+        signUp,
+        logIn,
+        currentUser,
+        logOut,
+        updateUserData,
+      }}
+    >
       {!isLoading
         ? children
         : "Loading..."}

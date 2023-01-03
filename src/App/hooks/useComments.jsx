@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react"
 import PropTypes from "prop-types"
+import { toast } from "react-toastify"
 import { useParams } from "react-router-dom"
 import { useAuth } from "./useAuth"
 import { nanoid } from "nanoid"
-import { toast } from "react-toastify"
 import commentService from "../services/comment.service"
 
 const CommentsContext = React.createContext ()
@@ -13,27 +13,14 @@ export const useComments = () => {
 }
 
 export const CommentsProvider = ( { children } ) => {
-  const { currentUser } = useAuth ()
   const { userId } = useParams ()
+  const { currentUser } = useAuth ()
   const [ isLoading, setLoading ] = useState ( true )
   const [ comments, setComments ] = useState ( [] )
   const [ error, setError ] = useState ( null )
-
   useEffect ( () => {
     getComments ()
   }, [ userId ] )
-
-  async function removeComment ( id ) {
-    try {
-      const { content } = await commentService.removeComment ( id )
-      if ( content === null ) {
-        setComments ( prevState => prevState.filter ( c => c._id !== id ) )
-      }
-    } catch ( error ) {
-      errorCatcher ( error )
-    }
-  }
-
   async function createComment ( data ) {
     const comment = {
       ...data,
@@ -48,8 +35,8 @@ export const CommentsProvider = ( { children } ) => {
     } catch ( error ) {
       errorCatcher ( error )
     }
+    console.log ( comment )
   }
-
   async function getComments () {
     try {
       const { content } = await commentService.getComments ( userId )
@@ -60,10 +47,21 @@ export const CommentsProvider = ( { children } ) => {
       setLoading ( false )
     }
   }
-
   function errorCatcher ( error ) {
     const { message } = error.response.data
     setError ( message )
+  }
+  async function removeComment ( id ) {
+    try {
+      const { content } = await commentService.removeComment ( id )
+      if ( content === null ) {
+        setComments ( prevState =>
+          prevState.filter ( c => c._id !== id ),
+        )
+      }
+    } catch ( error ) {
+      errorCatcher ( error )
+    }
   }
   useEffect ( () => {
     if ( error !== null ) {
@@ -71,13 +69,12 @@ export const CommentsProvider = ( { children } ) => {
       setError ( null )
     }
   }, [ error ] )
-
   return (
     <CommentsContext.Provider
       value={{
-        isLoading,
         comments,
         createComment,
+        isLoading,
         removeComment,
       }}
     >
@@ -85,11 +82,10 @@ export const CommentsProvider = ( { children } ) => {
     </CommentsContext.Provider>
   )
 }
+
 CommentsProvider.propTypes = {
   children: PropTypes.oneOfType ( [
     PropTypes.arrayOf ( PropTypes.node ),
     PropTypes.node,
   ] ),
 }
-
-export default CommentsProvider
