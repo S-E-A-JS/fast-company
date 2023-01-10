@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react"
 
 import { validator } from "../../../utils/validator"
 
-import { useAuth } from "../../../hooks/useAuth"
 import TextField from "../../common/form/textField"
 import SelectField from "../../common/form/selectField"
 import RadioField from "../../common/form/radioField"
@@ -12,14 +11,12 @@ import MultiSelectField from "../../common/form/multiSelectField"
 import BackHistoryButton from "../../common/backButton"
 import { getQualities, getQualitiesLoadingStatus } from "../../../store/qualities"
 import { getProfessions, getProfessionsLoadingStatus } from "../../../store/professions"
-import { getCurrentUserData, updateUserData } from "../../../store/users"
+import { getCurrentUserData, getUsersList, updateUserData } from "../../../store/users"
 
 const EditUserPage = () => {
   const history = useHistory ()
   const [ isLoading, setIsLoading ] = useState ( true )
   const [ data, setData ] = useState ()
-  // const { updateUserData } = useAuth ()
-  // const updateCurrentUserData = useSelector ( updateUserData () )
   const dispatch = useDispatch ()
   const currentUser = useSelector ( getCurrentUserData () )
   const qualities = useSelector ( getQualities () )

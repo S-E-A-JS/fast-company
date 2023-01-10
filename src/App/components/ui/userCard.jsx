@@ -4,12 +4,12 @@ import { useSelector } from "react-redux"
 import PropTypes from "prop-types"
 
 import { getProfessionsById } from "../../store/professions"
-import { getCurrentUserId } from "../../store/users"
+import { getCurrentUserData } from "../../store/users"
 
 const UserCard = ( { user } ) => {
   const history = useHistory ()
-  const currentUser = useSelector ( getCurrentUserId () )
-  const profession = useSelector ( getProfessionsById ( currentUser.profession ) )
+  const currentUserData = useSelector ( getCurrentUserData () )
+  const profession = useSelector ( getProfessionsById ( currentUserData.profession ) )
 
   const handleClick = () => {
     history.push ( history.location.pathname + "/edit" )
@@ -18,7 +18,7 @@ const UserCard = ( { user } ) => {
   return (
     <div className="card mb-3">
       <div className="card-body">
-        {currentUser === user._id && (
+        {currentUserData._id === user._id && (
           <button
             className="position-absolute top-0 end-0 btn btn-light btn-sm"
             onClick={handleClick}

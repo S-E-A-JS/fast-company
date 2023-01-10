@@ -16,6 +16,7 @@ const initialState = localStorageService.getAccessToken ()
     },
     isLoggedIn: true,
     dataLoaded: false,
+    wasUpdate: false,
   }
   : {
     entities: null,
@@ -24,6 +25,7 @@ const initialState = localStorageService.getAccessToken ()
     auth: null,
     isLoggedIn: false,
     dataLoaded: false,
+    wasUpdate: false,
   }
 
 const usersSlice = createSlice ( {
@@ -65,8 +67,9 @@ const usersSlice = createSlice ( {
       state.isLoading = true
     },
     userUpdateRequestSuccess: ( state, action ) => {
-      state.entities = action.payload
+      state.entities = getUpdatedArray ( state, action )
       state.isLoading = false
+      state.wasUpdate = !state.wasUpdate
     },
     userUpdateRequestFailed: ( state, action ) => {
       state.error = action.payload
@@ -159,26 +162,25 @@ function createUser ( payload ) {
   }
 }
 
-// TODO: Доделать обновление пользователя
-/*
-Возможно:
-- нужно добавить новые редюсеры:
-  - текущий редюсер работает не так как нужно потому что
-  action.payload хранит в себе ответ от сервера в виде объекта
-  ОДНОГО пользователя
-FIX - достать userId из action.payload (возможно есть более простой способ достать id), по нему найти в entitties нужного юзера и перезаписать его
-ОЖИДАЕМЫЙ результат - так как в массиве entities изменится только текущий юзер все должно отображаться корректно
-*/
-
-export const updateUserData = data => async dispatch => {
-  dispatch ( userUpdateRequest () )
-  try {
-    const { content } = await userService.update ( data )
-    console.log ( content )
-    dispatch ( userUpdateRequestSuccess ( content ) )
-  } catch ( error ) {
-    dispatch ( userUpdateRequestFailed ( error.message ) )
+export function updateUserData ( payload ) {
+  return async function ( dispatch ) {
+    dispatch ( userUpdateRequest () )
+    try {
+      const data = await userService.update ( payload )
+      dispatch ( userUpdateRequestSuccess ( data ) )
+    } catch ( error ) {
+      dispatch ( userUpdateRequestFailed ( error.message ) )
+    }
   }
+}
+
+function getUpdatedArray ( state, action ) {
+  state.entities.map ( u => {
+    if ( u._id === action.payload._id ) {
+      return action.payload
+    }
+    return u
+  } )
 }
 
 // СЕЛЕКТОРЫ
@@ -208,5 +210,6 @@ export const getIsLoggedIn = () => state => state.users.isLoggedIn
 export const getDataStatus = () => state => state.users.dataLoaded
 export const getCurrentUserId = () => state => state.users.auth.userId
 export const getUsersLoadingStatus = () => state => state.users.isLoading
+export const getUserDataUpdateStatus = () => state => state.users.wasUpdate
 
 export default usersReducer
