@@ -24,6 +24,7 @@ const UserProvider = ( { children } ) => {
       setError ( null )
     }
   }, [ error ] )
+
   async function getUsers () {
     try {
       const { content } = await userService.get ()

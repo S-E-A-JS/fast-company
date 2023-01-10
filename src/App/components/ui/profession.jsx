@@ -7,7 +7,6 @@ import { getProfessionsById, getProfessionsLoadingStatus } from "../../store/pro
 const Profession = ( { id } ) => {
   const professionsLoading = useSelector ( getProfessionsLoadingStatus () )
   const profession = useSelector ( getProfessionsById ( id ) )
-  console.log ( profession )
   if ( !professionsLoading ) {
     return <p>{profession.name}</p>
   } else return "Loading..."
