@@ -1,4 +1,3 @@
-import { useHistory } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import React, { useEffect, useState } from "react"
 
@@ -11,10 +10,9 @@ import MultiSelectField from "../../common/form/multiSelectField"
 import BackHistoryButton from "../../common/backButton"
 import { getQualities, getQualitiesLoadingStatus } from "../../../store/qualities"
 import { getProfessions, getProfessionsLoadingStatus } from "../../../store/professions"
-import { getCurrentUserData, getUsersList, updateUserData } from "../../../store/users"
+import { getCurrentUserData, updateUserData } from "../../../store/users"
 
 const EditUserPage = () => {
-  const history = useHistory ()
   const [ isLoading, setIsLoading ] = useState ( true )
   const [ data, setData ] = useState ()
   const dispatch = useDispatch ()
@@ -42,7 +40,6 @@ const EditUserPage = () => {
       ...data,
       qualities: data.qualities.map ( q => q.value ),
     } ) )
-    history.push ( `/users/${currentUser._id}` )
   }
 
   function getQualitiesListByIds ( qualitiesIds ) {

@@ -8,5 +8,5 @@ function generateAuthError ( message ) {
     return "Слишком много попыток входа. Попробуйте позже"
   }
 }
-
+console.log ( 1 )
 export default generateAuthError
