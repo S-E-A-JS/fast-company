@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react'
-import professions from '../mockData/professions.json'
-import qualities from '../mockData/qualities.json'
-import users from '../mockData/users.json'
-import httpService from '../services/http.service'
+import { useEffect, useState } from "react"
+import professions from "../mockData/professions.json"
+import qualities from "../mockData/qualities.json"
+import users from "../mockData/users.json"
+import httpService from "../services/http.service"
 
 const useMockData = () => {
   const statusConsts = {
-    idle: 'Not Started',
-    pending: 'In Process',
-    successed: 'Ready',
-    error: 'Error occurred',
+    idle: "Not Started",
+    pending: "In Process",
+    successed: "Ready",
+    error: "Error occurred",
   }
   const [ error, setError ] = useState ( null )
   const [ status, setStatus ] = useState ( statusConsts.idle )
@@ -38,15 +38,15 @@ const useMockData = () => {
   async function initialize () {
     try {
       for ( const prof of professions ) {
-        await httpService.put ( 'profession/' + prof._id, prof )
+        await httpService.put ( "profession/" + prof._id, prof )
         incrementCount ()
       }
       for ( const user of users ) {
-        await httpService.put ( 'user/' + user._id, user )
+        await httpService.put ( "user/" + user._id, user )
         incrementCount ()
       }
       for ( const qual of qualities ) {
-        await httpService.put ( 'quality/' + qual._id, qual )
+        await httpService.put ( "quality/" + qual._id, qual )
         incrementCount ()
       }
     } catch ( error ) {

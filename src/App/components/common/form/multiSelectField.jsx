@@ -1,12 +1,12 @@
-import React from 'react'
-import Select from 'react-select'
-import PropTypes from 'prop-types'
+import React from "react"
+import Select from "react-select"
+import PropTypes from "prop-types"
 
 const MultiSelectField = ( {
   options, onChange, name, label, defaultValue,
 } ) => {
   const optionsArray =
-        !Array.isArray ( options ) && typeof options === 'object'
+        !Array.isArray ( options ) && typeof options === "object"
           ? Object.values ( options )
           : options
 

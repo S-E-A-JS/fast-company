@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react'
-import PropTypes from 'prop-types'
-import ProfessionService from '../services/profession.service'
-import { toast } from 'react-toastify'
+import React, { useContext, useEffect, useState } from "react"
+import PropTypes from "prop-types"
+import ProfessionService from "../services/profession.service"
+import { toast } from "react-toastify"
 
 const ProfessionContext = React.createContext ()
 
@@ -27,6 +27,7 @@ export const ProfessionProvider = ( { children } ) => {
     const { message } = error.response.data
     setError ( message )
   }
+
   function getProfession ( id ) {
     return professions.find ( p => p._id === id )
   }

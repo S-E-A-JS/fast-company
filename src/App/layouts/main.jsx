@@ -1,5 +1,5 @@
-import React from 'react'
-import useMockData from '../utils/mockData'
+import React from "react"
+import useMockData from "../utils/mockData"
 
 const Main = () => {
   const {
@@ -19,7 +19,7 @@ const Main = () => {
       </ul>
       <button className="btn btn-primary"
         onClick={handleClick}>
-        {' '}
+        {" "}
                 Инициализировать
       </button>
     </div>

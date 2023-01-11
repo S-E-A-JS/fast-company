@@ -1,5 +1,5 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React from "react"
+import PropTypes from "prop-types"
 
 const TextAreaField = ( {
   label, name, value, onChange, error,
@@ -11,9 +11,9 @@ const TextAreaField = ( {
     } )
   }
   const getInputClasses = () => {
-    return 'form-control' + ( error
-      ? ' is-invalid'
-      : '' )
+    return "form-control" + ( error
+      ? " is-invalid"
+      : "" )
   }
 
   return (
@@ -34,7 +34,7 @@ const TextAreaField = ( {
   )
 }
 TextAreaField.defaultProps = {
-  type: 'text',
+  type: "text",
 }
 TextAreaField.propTypes = {
   label: PropTypes.string,
