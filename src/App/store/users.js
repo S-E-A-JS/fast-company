@@ -3,6 +3,7 @@ import authService from "../services/auth.service"
 import localStorageService from "../services/localStorage.service"
 
 import userService from "../services/user.service"
+import generateAuthError from "../utils/generateAuthErrors"
 import getRandomInt from "../utils/getRandomInt"
 import history from "../utils/history"
 
@@ -16,7 +17,6 @@ const initialState = localStorageService.getAccessToken ()
     },
     isLoggedIn: true,
     dataLoaded: false,
-    wasUpdate: false,
   }
   : {
     entities: null,
@@ -25,7 +25,6 @@ const initialState = localStorageService.getAccessToken ()
     auth: null,
     isLoggedIn: false,
     dataLoaded: false,
-    wasUpdate: false,
   }
 
 const usersSlice = createSlice ( {
@@ -67,7 +66,7 @@ const usersSlice = createSlice ( {
       state.isLoading = true
     },
     userUpdateRequestSuccess: ( state, action ) => {
-      state.entities = getUpdatedArray ( state, action )
+      state.entities[state.entities.findIndex ( user => user._id === action.payload._id )] = action.payload
       state.isLoading = false
       state.wasUpdate = !state.wasUpdate
     },
@@ -109,7 +108,13 @@ export const logIn = ( { payload, redirect } ) => async dispatch => {
     localStorageService.setTokens ( data )
     history.push ( redirect )
   } catch ( error ) {
-    dispatch ( authRequestFailed ( error.message ) )
+    const { code, message } = error.response.data.error
+    if ( code === 400 ) {
+      const errorMessage = generateAuthError ( message )
+      dispatch ( authRequestFailed ( errorMessage ) )
+    } else {
+      dispatch ( authRequestFailed ( error.message ) )
+    }
   }
 }
 
@@ -166,21 +171,13 @@ export function updateUserData ( payload ) {
   return async function ( dispatch ) {
     dispatch ( userUpdateRequest () )
     try {
-      const data = await userService.update ( payload )
-      dispatch ( userUpdateRequestSuccess ( data ) )
+      const { content } = await userService.update ( payload )
+      dispatch ( userUpdateRequestSuccess ( content ) )
+      history.push ( `/users/${content._id}` )
     } catch ( error ) {
       dispatch ( userUpdateRequestFailed ( error.message ) )
     }
   }
-}
-
-function getUpdatedArray ( state, action ) {
-  state.entities.map ( u => {
-    if ( u._id === action.payload._id ) {
-      return action.payload
-    }
-    return u
-  } )
 }
 
 // СЕЛЕКТОРЫ
@@ -210,6 +207,5 @@ export const getIsLoggedIn = () => state => state.users.isLoggedIn
 export const getDataStatus = () => state => state.users.dataLoaded
 export const getCurrentUserId = () => state => state.users.auth.userId
 export const getUsersLoadingStatus = () => state => state.users.isLoading
-export const getUserDataUpdateStatus = () => state => state.users.wasUpdate
 
 export default usersReducer
